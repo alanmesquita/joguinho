@@ -19,6 +19,8 @@
   	<script type="text/javascript">
   		$(function(){
 
+  			const FPS = 30;
+
   			//criar canvas
   			var canvas = document.createElement("canvas");
   			var ctx = canvas.getContext("2d");
@@ -36,7 +38,9 @@
 
 			//objetos do jogo
 			var navinha = {
-				speed : 150
+				speed : 150,
+				rotateSpeed : 6,
+				angle : 0
 			}
 
 			//controlador do teclado
@@ -70,12 +74,14 @@
 
 				//esquerda
 				if (37 in keyDowns) {
-					navinha.x -= navinha.speed * modifier;
+					navinha.angle -= navinha.rotateSpeed;
+					//navinha.x -= navinha.speed * modifier;
 				}
 
 				//direita
 				if (39 in keyDowns) {
-					navinha.x += navinha.speed * modifier;
+					navinha.angle += navinha.rotateSpeed;
+					//navinha.x += navinha.speed * modifier;
 				}
 			}
 
@@ -83,7 +89,12 @@
 			var render = function () {
 
 				if (navinhaReady) {
-					ctx.drawImage(navinhaImage, navinha.x, navinha.y);
+					ctx.translate(navinha.x+(navinhaImage.width/2), navinha.y+(navinhaImage.height/2));
+					ctx.rotate(navinha.angle * Math.PI / 180);
+
+					ctx.drawImage(navinhaImage, 0, 0, navinhaImage.width, navinhaImage.height, -(navinhaImage.width/2), -(navinhaImage.height/2), navinhaImage.width, navinhaImage.height);
+
+					//ctx.drawImage(navinhaImage, navinha.x, navinha.y);
 				};
 			}
 
@@ -92,15 +103,20 @@
 				var now = Date.now();
 				var delta = now - then;
 				update(delta / 1000);
+				
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.save();
+
 				render();
+				
+				ctx.restore();
 
 				then = now;
 			};
 
 			reset();
 			var then = Date.now();
-			setInterval(main, 1); 
+			setInterval(main, FPS); 
   		})
   	</script>
 
