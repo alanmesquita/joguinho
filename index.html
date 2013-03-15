@@ -38,7 +38,7 @@
 
 			//objetos do jogo
 			var navinha = {
-				speed : 150,
+				speed : 10,
 				rotateSpeed : 6,
 				angle : 0
 			}
@@ -64,7 +64,8 @@
 			var update = function (modifier) {
 				//cima
 				if (38 in keyDowns) {
-					navinha.y -= navinha.speed * modifier;
+					navinha.y -= navinha.speed*Math.cos(getAngle(navinha.angle));
+					navinha.x += navinha.speed*Math.sin(getAngle(navinha.angle));
 				}
 
 				//baixo
@@ -91,8 +92,22 @@
 				if (navinhaReady) {
 					ctx.translate(navinha.x+(navinhaImage.width/2), navinha.y+(navinhaImage.height/2));
 					ctx.rotate(navinha.angle * Math.PI / 180);
+					//console.log(navinha.angle * Math.PI / 180);
+					ctx.drawImage(
+						navinhaImage, 
+						0, 
+						0, 
+						navinhaImage.width, 
+						navinhaImage.height, 
+						-(navinhaImage.width/2), 
+						-(navinhaImage.height/2), 
+						navinhaImage.width, 
+						navinhaImage.height
+					);
 
-					ctx.drawImage(navinhaImage, 0, 0, navinhaImage.width, navinhaImage.height, -(navinhaImage.width/2), -(navinhaImage.height/2), navinhaImage.width, navinhaImage.height);
+					if( getAngle(navinha.angle) > Math.PI*2 || getAngle(navinha.angle) < -(Math.PI*2)){
+						navinha.angle = 0;
+					}
 
 					//ctx.drawImage(navinhaImage, navinha.x, navinha.y);
 				};
@@ -117,7 +132,17 @@
 			reset();
 			var then = Date.now();
 			setInterval(main, FPS); 
-  		})
+  		});
+		
+		/**
+		 *
+		 * @param int position
+		 * @return int
+		 */
+		var getAngle = function (position) {
+			return position * Math.PI / 180;
+		}
+
   	</script>
 
 </head>
