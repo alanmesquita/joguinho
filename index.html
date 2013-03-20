@@ -20,6 +20,7 @@
   		$(function(){
 
   			const FPS = 30;
+  			const MAX_ACELERATE = 30;
 
   			//criar canvas
   			var canvas = document.createElement("canvas");
@@ -47,9 +48,10 @@
 
 			//objetos do jogo
 			var navinha = {
-				speed : 10,
+				speed : 15,
 				rotateSpeed : 6,
-				angle : 0
+				angle : 0,
+				strength : 0
 			}
 
 			//objetos do jogo
@@ -84,13 +86,24 @@
 			var update = function (modifier) {
 				//cima
 				if (38 in keyDowns) {
-					sky.y += navinha.speed*Math.cos(getAngle(navinha.angle));
-					sky.x -= navinha.speed*Math.sin(getAngle(navinha.angle));
+					if(navinha.strength > 0){
+						sky.y += ((navinha.speed*navinha.strength)/MAX_ACELERATE)*Math.cos(getAngle(navinha.angle));
+						sky.x -= ((navinha.speed*navinha.strength)/MAX_ACELERATE)*Math.sin(getAngle(navinha.angle));
+					}
+					if (navinha.strength < MAX_ACELERATE) {
+						navinha.strength++;
+					};
+				} else {
+						sky.y += ((navinha.speed*navinha.strength)/MAX_ACELERATE)*Math.cos(getAngle(navinha.angle));
+						sky.x -= ((navinha.speed*navinha.strength)/MAX_ACELERATE)*Math.sin(getAngle(navinha.angle));
+					if (navinha.strength > 0) {
+						navinha.strength--;
+					};
 				}
 
 				//baixo
 				if (40 in keyDowns) {
-					navinha.y += navinha.speed * modifier;
+					//navinha.y += navinha.speed * modifier;
 				}
 
 				//esquerda
@@ -146,6 +159,7 @@
 
 			// loop do jogo
 			var main = function () {
+				console.log(navinha.strength);				
 				var now = Date.now();
 				var delta = now - then;
 				update(delta / 1000);
