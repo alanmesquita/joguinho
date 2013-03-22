@@ -15,6 +15,7 @@
 
   	<!-- SCRIPTS -->
   	<script src="js/jquery.js"></script>
+  	<script src="js/createElement.js"></script>
 
   	<script type="text/javascript">
   		$(function(){
@@ -158,8 +159,7 @@
 			};
 
 			// loop do jogo
-			var main = function () {
-				console.log(navinha.strength);				
+			var main = function () {				
 				var now = Date.now();
 				var delta = now - then;
 				update(delta / 1000);
